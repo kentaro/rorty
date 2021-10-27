@@ -1,10 +1,13 @@
 defmodule Toyex.Ast.Expression.Binary do
   defstruct [:operator, :left, :right]
 
+  @type operator :: Toyox.Operator.t()
+  @type left :: Toyox.Ast.Expression.t()
+  @type right :: Toyox.Ast.Expression.t()
   @type t :: %Toyex.Ast.Expression.Binary{
-          operator: Toyox.Operator.t(),
-          left: Toyox.Ast.Expression.t(),
-          right: Toyox.Ast.Expression.t()
+          operator: operator,
+          left: left,
+          right: right
         }
 
   @behaviour Toyex.Ast.Expression

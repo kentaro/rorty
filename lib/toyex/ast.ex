@@ -34,4 +34,15 @@ defmodule Toyex.Ast do
   def integer(value) do
     %Toyex.Ast.Expression.IntegerLiteral{value: value}
   end
+
+  def identifier(name) do
+    %Toyex.Ast.Expression.Identifier{name: name}
+  end
+
+  def assignment(name, value) do
+    %Toyex.Ast.Expression.Assignment{
+      name: name,
+      value: value
+    }
+  end
 end
