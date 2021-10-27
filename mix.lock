@@ -1,0 +1,3 @@
+%{
+  "neotomex": {:hex, :neotomex, "0.1.7", "64f76513653aa87ea7abdde0fd600e56955d838020a13d88f2bf334c88ac3e7a", [:mix], [], "hexpm", "4b87b8f614d1cd89dc8ba80ba0e559bedb3ebf6f6d74cd774fcfdd215e861445"},
+}
