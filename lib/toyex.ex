@@ -95,4 +95,27 @@ defmodule Toyex do
       {0, env}
     end
   end
+
+  def interpret(%Toyex.Ast.Expr.Def{} = expr, %Toyex.Env{} = env) do
+    env = Toyex.Env.put_def(env, expr.name, expr)
+    {0, env}
+  end
+
+  def interpret(%Toyex.Ast.Expr.Call{} = expr, %Toyex.Env{} = env) do
+    def = Toyex.Env.get_def(env, expr.name)
+
+    unless def do
+      raise("no such function: #{expr.name}")
+    end
+
+    local_env =
+      Enum.zip(def.args, expr.args)
+      |> Enum.reduce(%Toyex.Env{}, fn {name, expr}, env ->
+        {var, env} = interpret(expr, env)
+        Toyex.Env.put(env, name, var)
+      end)
+
+    {value, _} = interpret(def.body, local_env)
+    {value, env}
+  end
 end

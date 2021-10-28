@@ -114,4 +114,19 @@ defmodule Toyex.Ast do
       body: body
     }
   end
+
+  def def(name, args, body) do
+    %Toyex.Ast.Expr.Def{
+      name: name,
+      args: args,
+      body: body
+    }
+  end
+
+  def call(name, args) do
+    %Toyex.Ast.Expr.Call{
+      name: name,
+      args: args
+    }
+  end
 end
