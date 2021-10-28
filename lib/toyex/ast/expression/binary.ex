@@ -1,24 +1,18 @@
-defmodule Toyex.Ast.Expression.Binary do
+defmodule Toyex.Ast.Expr.Binary do
   defstruct [:operator, :left, :right]
 
   @type operator :: Toyox.Operator.t()
-  @type left :: Toyox.Ast.Expression.t()
-  @type right :: Toyox.Ast.Expression.t()
-  @type t :: %Toyex.Ast.Expression.Binary{
+  @type left :: Toyox.Ast.Expr.t()
+  @type right :: Toyox.Ast.Expr.t()
+  @type t :: %Toyex.Ast.Expr.Binary{
           operator: operator,
           left: left,
           right: right
         }
 
-  @behaviour Toyex.Ast.Expression
+  @behaviour Toyex.Ast.Expr
 
   def to_string(expr) do
     "#{expr.operator.to_string()}(#{expr.left}, #{expr.right})"
-  end
-end
-
-defimpl String.Chars, for: Toyex.Ast.Expression.Binary do
-  def to_string(expr) do
-    Toyex.Ast.Expression.Binary.to_string(expr)
   end
 end

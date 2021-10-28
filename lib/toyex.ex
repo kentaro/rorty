@@ -13,7 +13,7 @@ defmodule Toyex do
       {10, env}
 
   """
-  def interpret(%Toyex.Ast.Expression.Binary{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Toyex.Ast.Expr.Binary{} = expr, %Toyex.Env{} = env) do
     {left, env} = interpret(expr.left, env)
     {right, env} = interpret(expr.right, env)
 
@@ -29,19 +29,70 @@ defmodule Toyex do
 
       Toyex.Operator.Subtract ->
         {left - right, env}
+
+      Toyex.Operator.LessThan ->
+        {if(left < right, do: 1, else: 0), env}
+
+      Toyex.Operator.LessOrEqual ->
+        {if(left <= right, do: 1, else: 0), env}
+
+      Toyex.Operator.GreaterThan ->
+        {if(left > right, do: 1, else: 0), env}
+
+      Toyex.Operator.GreaterOrEqual ->
+        {if(left >= right, do: 1, else: 0), env}
+
+      Toyex.Operator.Equal ->
+        {if(left == right, do: 1, else: 0), env}
+
+      Toyex.Operator.NotEqual ->
+        {if(left != right, do: 1, else: 0), env}
     end
   end
 
-  def interpret(%Toyex.Ast.Expression.IntegerLiteral{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Toyex.Ast.Expr.IntegerLiteral{} = expr, %Toyex.Env{} = env) do
     {expr.value, env}
   end
 
-  def interpret(%Toyex.Ast.Expression.Identifier{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Toyex.Ast.Expr.Identifier{} = expr, %Toyex.Env{} = env) do
     {Toyex.Env.get(env, expr.name), env}
   end
 
-  def interpret(%Toyex.Ast.Expression.Assignment{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Toyex.Ast.Expr.Assignment{} = expr, %Toyex.Env{} = env) do
     {value, env} = interpret(expr.value, env)
     {value, Toyex.Env.put(env, expr.name, value)}
+  end
+
+  def interpret(%Toyex.Ast.Expr.Block{} = expr, %Toyex.Env{} = env) do
+    expr.exprs
+    |> Enum.reduce({0, env}, fn expr, acc ->
+      {_, env} = acc
+      interpret(expr, env)
+    end)
+  end
+
+  def interpret(%Toyex.Ast.Expr.If{} = expr, %Toyex.Env{} = env) do
+    {condition, env} = interpret(expr.condition, env)
+
+    if condition != 0 do
+      interpret(expr.then, env)
+    else
+      if expr.otherwise do
+        interpret(expr.otherwise, env)
+      else
+        {0, env}
+      end
+    end
+  end
+
+  def interpret(%Toyex.Ast.Expr.While{} = expr, %Toyex.Env{} = env) do
+    {condition, env} = interpret(expr.condition, env)
+
+    if condition != 0 do
+      {_, env} = interpret(expr.body, env)
+      interpret(expr, env)
+    else
+      {0, env}
+    end
   end
 end
