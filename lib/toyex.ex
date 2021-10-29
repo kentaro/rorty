@@ -17,37 +17,7 @@ defmodule Toyex do
     {left, env} = interpret(expr.left, env)
     {right, env} = interpret(expr.right, env)
 
-    case expr.operator do
-      Toyex.Operator.Add ->
-        {left + right, env}
-
-      Toyex.Operator.Divide ->
-        {left / right, env}
-
-      Toyex.Operator.Multiply ->
-        {left * right, env}
-
-      Toyex.Operator.Subtract ->
-        {left - right, env}
-
-      Toyex.Operator.LessThan ->
-        {if(left < right, do: 1, else: 0), env}
-
-      Toyex.Operator.LessOrEqual ->
-        {if(left <= right, do: 1, else: 0), env}
-
-      Toyex.Operator.GreaterThan ->
-        {if(left > right, do: 1, else: 0), env}
-
-      Toyex.Operator.GreaterOrEqual ->
-        {if(left >= right, do: 1, else: 0), env}
-
-      Toyex.Operator.Equal ->
-        {if(left == right, do: 1, else: 0), env}
-
-      Toyex.Operator.NotEqual ->
-        {if(left != right, do: 1, else: 0), env}
-    end
+    expr.operator.execute(left, right, env)
   end
 
   def interpret(%Toyex.Ast.Expr.IntegerLiteral{} = expr, %Toyex.Env{} = env) do
