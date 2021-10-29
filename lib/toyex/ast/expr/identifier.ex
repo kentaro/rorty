@@ -12,3 +12,7 @@ defmodule Toyex.Ast.Expr.Identifier do
     "identifier(#{expr.name})"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.Identifier do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.Identifier
+end

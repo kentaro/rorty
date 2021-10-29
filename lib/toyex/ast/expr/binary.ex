@@ -16,3 +16,7 @@ defmodule Toyex.Ast.Expr.Binary do
     "#{expr.operator.to_string()}(#{expr.left}, #{expr.right})"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.Binary do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.Binary
+end

@@ -16,3 +16,7 @@ defmodule Toyex.Ast.Expr.If do
     "if #{expr.condition} then: #{expr.then} otherwise: #{expr.otherwise}"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.If do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.If
+end

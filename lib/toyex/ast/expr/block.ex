@@ -12,3 +12,7 @@ defmodule Toyex.Ast.Expr.Block do
     "#{expr.exprs}"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.Block do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.Block
+end

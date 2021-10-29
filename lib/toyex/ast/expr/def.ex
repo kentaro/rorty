@@ -16,3 +16,7 @@ defmodule Toyex.Ast.Expr.Def do
     "def #{expr.name} (#{Enum.join(expr.args, ", ")}) { #{expr.body} }"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.Def do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.Def
+end

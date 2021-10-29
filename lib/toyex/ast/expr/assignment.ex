@@ -14,3 +14,7 @@ defmodule Toyex.Ast.Expr.Assignment do
     "#{expr.name} = #{expr.value}"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.Assignment do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.Assignment
+end

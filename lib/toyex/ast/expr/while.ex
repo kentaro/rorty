@@ -14,3 +14,7 @@ defmodule Toyex.Ast.Expr.While do
     "while #{expr.condition} : #{expr.body}"
   end
 end
+
+defimpl String.Chars, for: Toyex.Ast.Expr.While do
+  defdelegate to_string(expr), to: Toyex.Ast.Expr.While
+end
