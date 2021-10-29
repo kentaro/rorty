@@ -2,20 +2,17 @@ defmodule Toyex.Grammar do
   use Neotomex.ExGrammar
 
   @root true
-  define :additive, "multitive <'+'> additive / multitive" do
-    int when is_struct(int, Toyex.Ast.Expr.IntegerLiteral) -> int
+  define :additive, "multitive <spacing?> <'+'> <spacing?> additive / multitive" do
     [x, y] -> Toyex.Ast.add(x, y)
+    x -> x
   end
 
-  define :multitive, "primary <'*'> multitive / primary" do
-    int when is_struct(int, Toyex.Ast.Expr.IntegerLiteral) -> int
+  define :multitive, "primary <spacing?> <'*'> <spacing?> multitive / primary" do
     [x, y] -> Toyex.Ast.multiply(x, y)
+    x -> x
   end
 
-  define :primary, "(<'('> additive <')'>) / decimal" do
-    int when is_struct(int, Toyex.Ast.Expr.IntegerLiteral) -> int
-    [additive] -> additive
-  end
+  define :primary, "(<'('> <spacing?> additive <spacing?> <')'>) / decimal"
 
   define :decimal, "[0-9]+" do
     digits ->
@@ -23,6 +20,8 @@ defmodule Toyex.Grammar do
       |> String.to_integer()
       |> Toyex.Ast.integer()
   end
+
+  define :spacing, "[ \\r\\n\\s\\t]*"
 
   def repl do
     input = IO.gets("Enter an equation: ")
