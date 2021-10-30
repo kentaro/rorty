@@ -1,15 +1,15 @@
 defmodule Toyex.Ast.Expr.Block do
-  defstruct [:exprs]
+  defstruct [:stmts]
 
-  @type exprs :: [Toyox.Ast.Expr.t()]
+  @type stmts :: [Toyox.Ast.Expr.t()]
   @type t :: %Toyex.Ast.Expr.Block{
-          exprs: exprs
+          stmts: stmts
         }
 
   @behaviour Toyex.Ast.Expr
 
   def to_string(expr) do
-    "#{expr.exprs}"
+    "#{expr.stmts}"
   end
 end
 

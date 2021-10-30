@@ -34,10 +34,10 @@ defmodule Toyex do
   end
 
   def interpret(%Toyex.Ast.Expr.Block{} = expr, %Toyex.Env{} = env) do
-    expr.exprs
-    |> Enum.reduce({0, env}, fn expr, acc ->
+    expr.stmts
+    |> Enum.reduce({0, env}, fn stmt, acc ->
       {_, env} = acc
-      interpret(expr, env)
+      interpret(stmt, env)
     end)
   end
 
