@@ -85,14 +85,25 @@ defmodule Toyex.Interpreter do
   end
 
   def interpret(%Toyex.Ast.Expr.Call{} = expr, %Toyex.Env{} = env) do
-    def = Toyex.Env.get_def(env, expr.name)
+    def = resolve_function(env, expr.name)
+    call_function(def, expr, env)
+  end
+
+  defp resolve_function(env, name) do
+    def =
+      Toyex.Env.get_def(env, name) ||
+        Toyex.Builtins.function_for(name.name)
 
     unless def do
-      raise("no such function: #{expr.name}")
+      raise("no such function: #{name}")
     end
 
+    def
+  end
+
+  defp call_function(%Toyex.Ast.Expr.Def{} = def, %Toyex.Ast.Expr.Call{} = caller, env) do
     local_env =
-      Enum.zip(def.args, expr.args)
+      Enum.zip(def.args || [], caller.args || [])
       |> Enum.reduce(%Toyex.Env{}, fn {name, expr}, acc ->
         {var, _} = interpret(expr, env)
         Toyex.Env.put(acc, name, var)
@@ -101,5 +112,14 @@ defmodule Toyex.Interpreter do
 
     {value, _} = interpret(def.body, local_env)
     {value, env}
+  end
+
+  defp call_function([module: module, name: name], %Toyex.Ast.Expr.Call{} = caller, env) do
+    args =
+      caller.args
+      |> Enum.map(&interpret(&1, env))
+      |> Enum.map(fn {arg, _} -> arg end)
+
+    {apply(module, name, args), env}
   end
 end

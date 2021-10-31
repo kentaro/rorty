@@ -17,6 +17,9 @@ defmodule Toyex.Grammar do
 
   define :def,
          "<'def'> <space?> identifier <'('> (identifier (<space?> <','> <space?> identifier)*)? <')'> block" do
+    [name, nil, body] ->
+      Toyex.Ast.def(name, nil, body)
+
     [name, args, body] ->
       args = List.flatten(args)
       Toyex.Ast.def(name, args, body)
@@ -61,6 +64,9 @@ defmodule Toyex.Grammar do
   define(:primary, "<'('> expr <')'> / call / string / number / boolean / identifier")
 
   define :call, "identifier <'('> (expr (<','> expr)*)? <')'> <space?>" do
+    [name, nil] ->
+      Toyex.Ast.call(name, nil)
+
     [name, args] ->
       args = List.flatten(args)
       Toyex.Ast.call(name, args)
