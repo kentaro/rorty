@@ -62,13 +62,13 @@ defmodule Toyex do
   end
 
   def interpret(%Toyex.Ast.Expr.Identifier{} = expr, %Toyex.Env{} = env) do
-    value = Toyex.Env.get(env, expr.name)
+    value = Toyex.Env.get(env, expr)
     {value, env}
   end
 
   def interpret(%Toyex.Ast.Expr.Assignment{} = expr, %Toyex.Env{} = env) do
     {value, env} = interpret(expr.value, env)
-    {value, Toyex.Env.put(env, expr.name.name, value)}
+    {value, Toyex.Env.put(env, expr.name, value)}
   end
 
   def interpret(%Toyex.Ast.Expr.Block{} = expr, %Toyex.Env{} = env) do
@@ -118,10 +118,11 @@ defmodule Toyex do
 
     local_env =
       Enum.zip(def.args, expr.args)
-      |> Enum.reduce(%Toyex.Env{}, fn {name, expr}, env ->
-        {var, env} = interpret(expr, env)
-        Toyex.Env.put(env, name, var)
+      |> Enum.reduce(%Toyex.Env{}, fn {name, expr}, acc ->
+        {var, _} = interpret(expr, env)
+        Toyex.Env.put(acc, name, var)
       end)
+      |> Map.put(:defs, env.defs)
 
     {value, _} = interpret(def.body, local_env)
     {value, env}

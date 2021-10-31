@@ -12,7 +12,7 @@ defmodule ToyexTest do
 
   describe "run_from_file()" do
     test "simple code" do
-      assert Toyex.run_from_file("test/assets/test.toyex") == 10
+      assert Toyex.run_from_file("examples/factorial.toyex") == 120
     end
   end
 
@@ -55,7 +55,7 @@ defmodule ToyexTest do
     end
 
     test "identifier expression" do
-      env = %Toyex.Env{vars: %{"foo" => 10}}
+      env = %Toyex.Env{vars: %{identifier("foo") => 10}}
       ast = identifier("foo")
 
       {result, _env} = Toyex.interpret(ast, env)
@@ -141,7 +141,7 @@ defmodule ToyexTest do
     end
 
     test "while expression" do
-      env = %Toyex.Env{vars: %{"foo" => 10}}
+      env = %Toyex.Env{vars: %{identifier("foo") => 10}}
 
       ast =
         while(
@@ -182,12 +182,12 @@ defmodule ToyexTest do
     end
 
     test "call expression" do
-      env = %Toyex.Env{vars: %{"a" => 1, "b" => 2}}
+      env = %Toyex.Env{vars: %{identifier("a") => 1, identifier("b") => 2}}
 
       def =
         def(
-          "foo",
-          ["a", "b"],
+          identifier("foo"),
+          [identifier("a"), identifier("b")],
           block([
             add(
               identifier("a"),
@@ -199,7 +199,7 @@ defmodule ToyexTest do
       ast =
         block([
           def,
-          call("foo", [
+          call(identifier("foo"), [
             integer(3),
             integer(4)
           ])
@@ -209,8 +209,8 @@ defmodule ToyexTest do
       assert result == 7
 
       assert env == %Toyex.Env{
-               vars: %{"a" => 1, "b" => 2},
-               defs: %{"foo" => def}
+               vars: %{identifier("a") => 1, identifier("b") => 2},
+               defs: %{identifier("foo") => def}
              }
     end
   end
