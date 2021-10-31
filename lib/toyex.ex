@@ -4,6 +4,21 @@ defmodule Toyex do
   """
 
   @doc """
+  Reeceive
+
+  ## Examples
+
+    iex> Toyex.run("1 + 1")
+    2
+  """
+  @spec run(String.t()) :: integer()
+  def run(src) do
+    {:ok, ast} = src |> String.trim() |> Toyex.Grammar.parse()
+    {result, _} = interpret(ast, %Toyex.Env{})
+    result
+  end
+
+  @doc """
   Interprets and evaluates the given AST.
 
   ## Examples
@@ -13,6 +28,14 @@ defmodule Toyex do
       {10, env}
 
   """
+  def interpret(exprs, %Toyex.Env{} = env) when is_list(exprs) do
+    exprs
+    |> Enum.reduce({0, env}, fn expr, acc ->
+      {_, env} = acc
+      interpret(expr, env)
+    end)
+  end
+
   def interpret(%Toyex.Ast.Expr.Binary{} = expr, %Toyex.Env{} = env) do
     {left, env} = interpret(expr.left, env)
     {right, env} = interpret(expr.right, env)
@@ -34,10 +57,10 @@ defmodule Toyex do
   end
 
   def interpret(%Toyex.Ast.Expr.Block{} = expr, %Toyex.Env{} = env) do
-    expr.stmts
-    |> Enum.reduce({0, env}, fn stmt, acc ->
+    expr.exprs
+    |> Enum.reduce({0, env}, fn expr, acc ->
       {_, env} = acc
-      interpret(stmt, env)
+      interpret(expr, env)
     end)
   end
 

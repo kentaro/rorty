@@ -2,7 +2,34 @@ defmodule ToyexTest do
   use ExUnit.Case
   doctest Toyex
 
+  describe "run()" do
+    test "simple code" do
+      assert Toyex.run("1 + 1") == 2
+    end
+  end
+
   describe "interpret()" do
+    test "multiple expressions" do
+      env = %Toyex.Env{}
+
+      ast = [
+        Toyex.Ast.assignment(
+          "foo",
+          Toyex.Ast.integer(3)
+        ),
+        Toyex.Ast.add(
+          Toyex.Ast.multiply(
+            Toyex.Ast.identifier("foo"),
+            Toyex.Ast.integer(3)
+          ),
+          Toyex.Ast.integer(1)
+        )
+      ]
+
+      {result, _env} = Toyex.interpret(ast, env)
+      assert result == 10
+    end
+
     test "binary expression" do
       env = %Toyex.Env{}
 

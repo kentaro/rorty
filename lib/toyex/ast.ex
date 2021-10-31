@@ -94,9 +94,9 @@ defmodule Toyex.Ast do
     }
   end
 
-  def block(stmts) do
+  def block(exprs) do
     %Toyex.Ast.Expr.Block{
-      stmts: stmts
+      exprs: exprs
     }
   end
 
