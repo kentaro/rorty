@@ -29,7 +29,7 @@ Are you sure you want to replace it with "toyex"? [Yn]
 Evaluates the Toyex code.
 
 ```shell
-$ toyex --eval "puts(1 + 1)"
+$ toyex -e "puts(1 + 1)"
 2
 ```
 
