@@ -108,3 +108,12 @@ defmodule Toyex.Operator.Subtract do
     {left - right, env}
   end
 end
+
+defmodule Toyex.Operator.Mod do
+  @name "mod"
+  use Toyex.Operator
+
+  def execute(left, right, env) do
+    {rem(left, right), env}
+  end
+end

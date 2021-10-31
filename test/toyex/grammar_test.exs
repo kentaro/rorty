@@ -370,6 +370,21 @@ defmodule Toyex.Grammar.Test do
                )
              ]
     end
+
+    test "mod" do
+      src = """
+      a % 1
+      """
+
+      {:ok, ast} = parse(src)
+
+      assert ast == [
+               mod(
+                 identifier("a"),
+                 integer(1)
+               )
+             ]
+    end
   end
 
   describe "primary" do
@@ -390,7 +405,7 @@ defmodule Toyex.Grammar.Test do
 
     test "call" do
       src = """
-      foo(a)
+      foo(a, b)
       """
 
       {:ok, ast} = parse(src)
@@ -398,7 +413,10 @@ defmodule Toyex.Grammar.Test do
       assert ast == [
                call(
                  identifier("foo"),
-                 [identifier("a")]
+                 [
+                  identifier("a"),
+                  identifier("b")
+                 ]
                )
              ]
     end

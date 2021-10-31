@@ -56,14 +56,15 @@ defmodule Toyex.Grammar do
     [left, "-", right] -> Toyex.Ast.subtract(left, right)
     [left, "*", right] -> Toyex.Ast.multiply(left, right)
     [left, "/", right] -> Toyex.Ast.divide(left, right)
+    [left, "%", right] -> Toyex.Ast.mod(left, right)
     primary -> primary
   end
 
-  define(:binary_operator, "'<=' / '<' / '>=' / '>' / '==' / '!=' / '+' / '-' / '*' / '/'")
+  define(:binary_operator, "'<=' / '<' / '>=' / '>' / '==' / '!=' / '+' / '-' / '*' / '/' / '%'")
 
   define(:primary, "<'('> expr <')'> / call / string / number / boolean / identifier")
 
-  define :call, "identifier <'('> (expr (<','> expr)*)? <')'> <space?>" do
+  define :call, "identifier <'('> (expr (<space?> <','> <space?> expr)*)? <')'> <space?>" do
     [name, nil] ->
       Toyex.Ast.call(name, nil)
 

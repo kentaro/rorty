@@ -31,6 +31,14 @@ defmodule Toyex.Ast do
     }
   end
 
+  def mod(left, right) do
+    %Toyex.Ast.Expr.Binary{
+      operator: Toyex.Operator.Mod,
+      left: left,
+      right: right
+    }
+  end
+
   def less_than(left, right) do
     %Toyex.Ast.Expr.Binary{
       operator: Toyex.Operator.LessThan,

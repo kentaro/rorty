@@ -1,1 +1,25 @@
-"fizzbuzz"
+def rem(n, base) {
+  n % base
+}
+
+def fizzbuzz(n) {
+  if (rem(n, 15) == 0) {
+    "FizzBuzz"
+  } else {
+    if (rem(n, 5) == 0) {
+      "Buzz"
+    } else {
+      if (rem(n, 3) == 0) {
+        "Fizz"
+      } else {
+        n
+      }
+    }
+  }
+}
+
+i = 1
+while (i <= 100) {
+  puts(fizzbuzz(i))
+  i = i + 1
+}
