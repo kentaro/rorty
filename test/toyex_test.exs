@@ -62,6 +62,22 @@ defmodule ToyexTest do
       assert result == 10
     end
 
+    test "boolean expression with true value" do
+      env = %Toyex.Env{}
+      ast = boolean(true)
+
+      {result, _env} = Toyex.interpret(ast, env)
+      assert result == true
+    end
+
+    test "boolean expression with false value" do
+      env = %Toyex.Env{}
+      ast = boolean(false)
+
+      {result, _env} = Toyex.interpret(ast, env)
+      assert result == false
+    end
+
     test "assignment expression" do
       env = %Toyex.Env{}
       ast = assignment(identifier("foo"), integer(10))

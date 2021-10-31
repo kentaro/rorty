@@ -66,6 +66,10 @@ defmodule Toyex do
     {value, env}
   end
 
+  def interpret(%Toyex.Ast.Expr.Boolean{} = expr, %Toyex.Env{} = env) do
+    {expr.value, env}
+  end
+
   def interpret(%Toyex.Ast.Expr.Assignment{} = expr, %Toyex.Env{} = env) do
     {value, env} = interpret(expr.value, env)
     {value, Toyex.Env.put(env, expr.name, value)}
