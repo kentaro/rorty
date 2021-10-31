@@ -6,4 +6,5 @@ def factorial(n) {
   }
 }
 
-factorial(5)
+result = factorial(5)
+puts(result)

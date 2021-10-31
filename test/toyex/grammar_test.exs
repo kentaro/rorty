@@ -414,8 +414,8 @@ defmodule Toyex.Grammar.Test do
                call(
                  identifier("foo"),
                  [
-                  identifier("a"),
-                  identifier("b")
+                   identifier("a"),
+                   identifier("b")
                  ]
                )
              ]
