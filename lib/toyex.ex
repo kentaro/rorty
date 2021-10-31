@@ -61,6 +61,10 @@ defmodule Toyex do
     {expr.value, env}
   end
 
+  def interpret(%Toyex.Ast.Expr.StringLiteral{} = expr, %Toyex.Env{} = env) do
+    {expr.value, env}
+  end
+
   def interpret(%Toyex.Ast.Expr.Identifier{} = expr, %Toyex.Env{} = env) do
     value = Toyex.Env.get(env, expr)
     {value, env}

@@ -403,6 +403,18 @@ defmodule Toyex.Grammar.Test do
              ]
     end
 
+    test "string" do
+      src = """
+      "hoge fuga"
+      """
+
+      {:ok, ast} = parse(src)
+
+      assert ast == [
+               string("hoge fuga")
+             ]
+    end
+
     test "number" do
       src = """
       100

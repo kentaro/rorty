@@ -58,7 +58,7 @@ defmodule Toyex.Grammar do
 
   define(:binary_operator, "'<=' / '<' / '>=' / '>' / '==' / '!=' / '+' / '-' / '*' / '/'")
 
-  define(:primary, "<'('> expr <')'> / call / number / boolean / identifier")
+  define(:primary, "<'('> expr <')'> / call / string / number / boolean / identifier")
 
   define :call, "identifier <'('> (expr (<','> expr)*)? <')'> <space?>" do
     [name, args] ->
@@ -70,6 +70,10 @@ defmodule Toyex.Grammar do
     chars ->
       Enum.join(chars)
       |> Toyex.Ast.identifier()
+  end
+
+  define :string, "<'\"'> (<!'\"'> ('\\\\' / '\\\"' / .))* <'\"'>" do
+    [chars] -> Toyex.Ast.string(Enum.join(for [c] <- chars, do: c))
   end
 
   define :boolean, "'true' / 'false'" do

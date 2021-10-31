@@ -83,6 +83,10 @@ defmodule Toyex.Ast do
     %Toyex.Ast.Expr.IntegerLiteral{value: value}
   end
 
+  def string(value) do
+    %Toyex.Ast.Expr.StringLiteral{value: value}
+  end
+
   def identifier(name) do
     %Toyex.Ast.Expr.Identifier{name: name}
   end
