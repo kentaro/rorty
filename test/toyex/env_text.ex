@@ -1,4 +1,4 @@
-defmodule ToyexTest do
+defmodule Toyex.Env.Test do
   use ExUnit.Case
   doctest Toyex
 
