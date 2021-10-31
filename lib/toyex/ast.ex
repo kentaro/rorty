@@ -87,6 +87,10 @@ defmodule Toyex.Ast do
     %Toyex.Ast.Expr.Identifier{name: name}
   end
 
+  def boolean(value) do
+    %Toyex.Ast.Expr.Boolean{value: value}
+  end
+
   def assignment(name, value) do
     %Toyex.Ast.Expr.Assignment{
       name: name,

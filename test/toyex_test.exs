@@ -2,9 +2,17 @@ defmodule ToyexTest do
   use ExUnit.Case
   doctest Toyex
 
+  import Toyex.Ast
+
   describe "run()" do
     test "simple code" do
       assert Toyex.run("1 + 1") == 2
+    end
+  end
+
+  describe "run_from_file()" do
+    test "simple code" do
+      assert Toyex.run_from_file("test/assets/test.toyex") == 10
     end
   end
 
@@ -13,16 +21,16 @@ defmodule ToyexTest do
       env = %Toyex.Env{}
 
       ast = [
-        Toyex.Ast.assignment(
-          "foo",
-          Toyex.Ast.integer(3)
+        assignment(
+          identifier("foo"),
+          integer(3)
         ),
-        Toyex.Ast.add(
-          Toyex.Ast.multiply(
-            Toyex.Ast.identifier("foo"),
-            Toyex.Ast.integer(3)
+        add(
+          multiply(
+            identifier("foo"),
+            integer(3)
           ),
-          Toyex.Ast.integer(1)
+          integer(1)
         )
       ]
 
@@ -34,12 +42,12 @@ defmodule ToyexTest do
       env = %Toyex.Env{}
 
       ast =
-        Toyex.Ast.add(
-          Toyex.Ast.multiply(
-            Toyex.Ast.integer(3),
-            Toyex.Ast.integer(3)
+        add(
+          multiply(
+            integer(3),
+            integer(3)
           ),
-          Toyex.Ast.integer(1)
+          integer(1)
         )
 
       {result, _env} = Toyex.interpret(ast, env)
@@ -48,7 +56,7 @@ defmodule ToyexTest do
 
     test "identifier expression" do
       env = %Toyex.Env{vars: %{"foo" => 10}}
-      ast = Toyex.Ast.identifier("foo")
+      ast = identifier("foo")
 
       {result, _env} = Toyex.interpret(ast, env)
       assert result == 10
@@ -56,7 +64,7 @@ defmodule ToyexTest do
 
     test "assignment expression" do
       env = %Toyex.Env{}
-      ast = Toyex.Ast.assignment("foo", Toyex.Ast.integer(10))
+      ast = assignment(identifier("foo"), integer(10))
 
       {result, _env} = Toyex.interpret(ast, env)
       assert result == 10
@@ -66,11 +74,11 @@ defmodule ToyexTest do
       env = %Toyex.Env{}
 
       ast =
-        Toyex.Ast.block([
-          Toyex.Ast.assignment("foo", Toyex.Ast.integer(10)),
-          Toyex.Ast.add(
-            Toyex.Ast.identifier("foo"),
-            Toyex.Ast.integer(3)
+        block([
+          assignment(identifier("foo"), integer(10)),
+          add(
+            identifier("foo"),
+            integer(3)
           )
         ])
 
@@ -82,10 +90,10 @@ defmodule ToyexTest do
       env = %Toyex.Env{}
 
       ast =
-        Toyex.Ast.if(
-          Toyex.Ast.equal(Toyex.Ast.integer(1), Toyex.Ast.integer(1)),
-          Toyex.Ast.block([Toyex.Ast.integer(100)]),
-          Toyex.Ast.block([Toyex.Ast.integer(99)])
+        if(
+          equal(integer(1), integer(1)),
+          block([integer(100)]),
+          block([integer(99)])
         )
 
       {result, _env} = Toyex.interpret(ast, env)
@@ -96,10 +104,10 @@ defmodule ToyexTest do
       env = %Toyex.Env{}
 
       ast =
-        Toyex.Ast.if(
-          Toyex.Ast.equal(Toyex.Ast.integer(1), Toyex.Ast.integer(0)),
-          Toyex.Ast.block([Toyex.Ast.integer(100)]),
-          Toyex.Ast.block([Toyex.Ast.integer(99)])
+        if(
+          equal(integer(1), integer(0)),
+          block([integer(100)]),
+          block([integer(99)])
         )
 
       {result, _env} = Toyex.interpret(ast, env)
@@ -111,8 +119,8 @@ defmodule ToyexTest do
 
       ast =
         Toyex.Ast.if(
-          Toyex.Ast.equal(Toyex.Ast.integer(1), Toyex.Ast.integer(1)),
-          Toyex.Ast.block([Toyex.Ast.integer(100)])
+          equal(integer(1), integer(1)),
+          block([integer(100)])
         )
 
       {result, _env} = Toyex.interpret(ast, env)
@@ -124,49 +132,52 @@ defmodule ToyexTest do
 
       ast =
         Toyex.Ast.if(
-          Toyex.Ast.equal(Toyex.Ast.integer(1), Toyex.Ast.integer(0)),
-          Toyex.Ast.block([Toyex.Ast.integer(100)])
+          equal(integer(1), integer(0)),
+          block([integer(100)])
         )
 
       {result, _env} = Toyex.interpret(ast, env)
-      assert result == 0
+      assert result == false
     end
 
     test "while expression" do
       env = %Toyex.Env{vars: %{"foo" => 10}}
 
       ast =
-        Toyex.Ast.while(
-          Toyex.Ast.greater_than(Toyex.Ast.identifier("foo"), Toyex.Ast.integer(0)),
-          Toyex.Ast.block([
-            Toyex.Ast.assignment(
-              "foo",
-              Toyex.Ast.subtract(
-                Toyex.Ast.identifier("foo"),
-                Toyex.Ast.integer(1)
+        while(
+          greater_than(
+            identifier("foo"),
+            integer(0)
+          ),
+          block([
+            assignment(
+              identifier("foo"),
+              subtract(
+                identifier("foo"),
+                integer(1)
               )
             )
           ])
         )
 
       {result, _env} = Toyex.interpret(ast, env)
-      assert result == 0
+      assert result == false
     end
 
     test "def expression" do
       env = %Toyex.Env{}
 
       def =
-        Toyex.Ast.def(
+        def(
           "foo",
           ["foo", "bar", "baz"],
-          Toyex.Ast.block([Toyex.Ast.integer(1)])
+          block([integer(1)])
         )
 
       ast = def
 
       {result, env} = Toyex.interpret(ast, env)
-      assert result == 0
+      assert result == false
       assert Toyex.Env.get_def(env, "foo") == def
     end
 
@@ -174,23 +185,23 @@ defmodule ToyexTest do
       env = %Toyex.Env{vars: %{"a" => 1, "b" => 2}}
 
       def =
-        Toyex.Ast.def(
+        def(
           "foo",
           ["a", "b"],
-          Toyex.Ast.block([
-            Toyex.Ast.add(
-              Toyex.Ast.identifier("a"),
-              Toyex.Ast.identifier("b")
+          block([
+            add(
+              identifier("a"),
+              identifier("b")
             )
           ])
         )
 
       ast =
-        Toyex.Ast.block([
+        block([
           def,
-          Toyex.Ast.call("foo", [
-            Toyex.Ast.integer(3),
-            Toyex.Ast.integer(4)
+          call("foo", [
+            integer(3),
+            integer(4)
           ])
         ])
 

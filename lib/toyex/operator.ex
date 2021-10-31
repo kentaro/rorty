@@ -42,7 +42,7 @@ defmodule Toyex.Operator.Equal do
   use Toyex.Operator
 
   def execute(left, right, env) do
-    {if(left == right, do: 1, else: 0), env}
+    {left == right, env}
   end
 end
 
@@ -51,7 +51,7 @@ defmodule Toyex.Operator.GreaterOrEqual do
   use Toyex.Operator
 
   def execute(left, right, env) do
-    {if(left >= right, do: 1, else: 0), env}
+    {left >= right, env}
   end
 end
 
@@ -60,7 +60,7 @@ defmodule Toyex.Operator.GreaterThan do
   use Toyex.Operator
 
   def execute(left, right, env) do
-    {if(left > right, do: 1, else: 0), env}
+    {left > right, env}
   end
 end
 
@@ -69,7 +69,7 @@ defmodule Toyex.Operator.LessOrEqual do
   use Toyex.Operator
 
   def execute(left, right, env) do
-    {if(left <= right, do: 1, else: 0), env}
+    {left <= right, env}
   end
 end
 
@@ -78,7 +78,7 @@ defmodule Toyex.Operator.LessThan do
   use Toyex.Operator
 
   def execute(left, right, env) do
-    {if(left < right, do: 1, else: 0), env}
+    {left < right, env}
   end
 end
 
@@ -96,7 +96,7 @@ defmodule Toyex.Operator.NotEqual do
   use Toyex.Operator
 
   def execute(left, right, env) do
-    {if(left != right, do: 1, else: 0), env}
+    {left != right, env}
   end
 end
 

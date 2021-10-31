@@ -2,21 +2,21 @@ defmodule Toyex.Grammar do
   use Neotomex.ExGrammar
 
   @root true
-  define :program, "statements"
+  define(:program, "statements")
 
-  define :statements, "statement*"
-
-  define :statement, "puts / assignment / def / while / if / block / expr"
-
-  define :puts, "<'puts'> <space?> <'('> expr <')'>" do
-    [args] -> IO.puts(args)
+  define :statements, "statement*" do
+    statements when is_list(statements) -> List.flatten(statements)
+    statements -> statements
   end
+
+  define(:statement, "<space?> (assignment / def / while / if / block / expr) <space?>")
 
   define :assignment, "identifier <space?> <'='> <space?> expr" do
     [name, value] -> Toyex.Ast.assignment(name, value)
   end
 
-  define :def, "<'def'> <space?> identifier <'('> (identifier (<space?> <','> <space?> identifier)*)? <')'> block" do
+  define :def,
+         "<'def'> <space?> identifier <'('> (identifier (<space?> <','> <space?> identifier)*)? <')'> block" do
     [name, args, body] ->
       args = List.flatten(args)
       Toyex.Ast.def(name, args, body)
@@ -27,20 +27,20 @@ defmodule Toyex.Grammar do
       Toyex.Ast.while(condition, body)
   end
 
-  define :if, "<'if'> <space?> <'('> expr <')'> block (<'else'> block)?" do
-    [condition, then, otherwise] ->
+  define :if, "<'if'> <space?> <'('> expr <')'> block (<space?> <'else'> block)?" do
+    [condition, then, [otherwise]] ->
       Toyex.Ast.if(condition, then, otherwise)
 
-    [condition, then] ->
+    [condition, then, nil] ->
       Toyex.Ast.if(condition, then)
   end
 
-  define :block, "<space?> <'{'> <space?> statements <space?> <'}'> <space?>" do
+  define :block, "<space?> <'{'> <space?> statements <space?> <'}'>" do
     [statements] ->
       Toyex.Ast.block(statements)
   end
 
-  define :expr, "binary_expr"
+  define(:expr, "binary_expr")
 
   define :binary_expr, "primary <space?> binary_operator <space?> binary_expr / primary" do
     [left, "<", right] -> Toyex.Ast.less_than(left, right)
@@ -53,14 +53,14 @@ defmodule Toyex.Grammar do
     [left, "-", right] -> Toyex.Ast.subtract(left, right)
     [left, "*", right] -> Toyex.Ast.multiply(left, right)
     [left, "/", right] -> Toyex.Ast.divide(left, right)
-    integer -> integer
+    primary -> primary
   end
 
-  define(:binary_operator, "'<' / '<=' / '>' / '>=' / '==' / '!=' / '+' / '-' / '*' / '/'")
+  define(:binary_operator, "'<=' / '<' / '>=' / '>' / '==' / '!=' / '+' / '-' / '*' / '/'")
 
-  define :primary, "<'('> expr <')'> / call / decimal / identifier"
+  define(:primary, "<'('> expr <')'> / call / number / boolean / identifier")
 
-  define :call, "identifier <'('> (expr (<','> expr)*)? <')'>" do
+  define :call, "identifier <'('> (expr (<','> expr)*)? <')'> <space?>" do
     [name, args] ->
       args = List.flatten(args)
       Toyex.Ast.call(name, args)
@@ -72,7 +72,12 @@ defmodule Toyex.Grammar do
       |> Toyex.Ast.identifier()
   end
 
-  define :decimal, "[0-9]+" do
+  define :boolean, "'true' / 'false'" do
+    "true" -> Toyex.Ast.boolean(true)
+    "false" -> Toyex.Ast.boolean(false)
+  end
+
+  define :number, "[0-9]+" do
     digits ->
       Enum.join(digits)
       |> String.to_integer()
@@ -80,6 +85,7 @@ defmodule Toyex.Grammar do
   end
 
   define(:space, "[ \\r\\n\\s\\t]*")
+  define(:line_break, "[\\r\\n]*")
 
   def repl do
     input = IO.gets("Enter an equation: ")

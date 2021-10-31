@@ -19,6 +19,20 @@ defmodule Toyex do
   end
 
   @doc """
+  Reeceive
+
+  ## Examples
+
+    # iex> Toyex.run_from_file("test/assets/test.toyex")
+    # 10
+  """
+  @spec run_from_file(String.t()) :: integer()
+  def run_from_file(filename) do
+    {:ok, src} = filename |> File.read()
+    run(src)
+  end
+
+  @doc """
   Interprets and evaluates the given AST.
 
   ## Examples
@@ -48,12 +62,13 @@ defmodule Toyex do
   end
 
   def interpret(%Toyex.Ast.Expr.Identifier{} = expr, %Toyex.Env{} = env) do
-    {Toyex.Env.get(env, expr.name), env}
+    value = Toyex.Env.get(env, expr.name)
+    {value, env}
   end
 
   def interpret(%Toyex.Ast.Expr.Assignment{} = expr, %Toyex.Env{} = env) do
     {value, env} = interpret(expr.value, env)
-    {value, Toyex.Env.put(env, expr.name, value)}
+    {value, Toyex.Env.put(env, expr.name.name, value)}
   end
 
   def interpret(%Toyex.Ast.Expr.Block{} = expr, %Toyex.Env{} = env) do
@@ -67,13 +82,13 @@ defmodule Toyex do
   def interpret(%Toyex.Ast.Expr.If{} = expr, %Toyex.Env{} = env) do
     {condition, env} = interpret(expr.condition, env)
 
-    if condition != 0 do
+    if condition do
       interpret(expr.then, env)
     else
       if expr.otherwise do
         interpret(expr.otherwise, env)
       else
-        {0, env}
+        {false, env}
       end
     end
   end
@@ -81,17 +96,17 @@ defmodule Toyex do
   def interpret(%Toyex.Ast.Expr.While{} = expr, %Toyex.Env{} = env) do
     {condition, env} = interpret(expr.condition, env)
 
-    if condition != 0 do
+    if condition do
       {_, env} = interpret(expr.body, env)
       interpret(expr, env)
     else
-      {0, env}
+      {false, env}
     end
   end
 
   def interpret(%Toyex.Ast.Expr.Def{} = expr, %Toyex.Env{} = env) do
     env = Toyex.Env.put_def(env, expr.name, expr)
-    {0, env}
+    {false, env}
   end
 
   def interpret(%Toyex.Ast.Expr.Call{} = expr, %Toyex.Env{} = env) do
