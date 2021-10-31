@@ -23,8 +23,8 @@ defmodule Toyex do
 
   ## Examples
 
-    # iex> Toyex.run_from_file("test/assets/test.toyex")
-    # 10
+    # iex> Toyex.run_from_file("examples/factorial.toyex")
+    # 120
   """
   @spec run_from_file(String.t()) :: integer()
   def run_from_file(filename) do

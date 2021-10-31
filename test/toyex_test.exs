@@ -2,8 +2,6 @@ defmodule ToyexTest do
   use ExUnit.Case
   doctest Toyex
 
-  import Toyex.Ast
-
   describe "run()" do
     test "simple code" do
       assert Toyex.run("1 + 1") == 2
@@ -12,7 +10,7 @@ defmodule ToyexTest do
 
   describe "run_from_file()" do
     test "simple code" do
-      assert Toyex.run_from_file("examples/factorial.toyex") == 120
+      assert Toyex.run_from_file("test/assets/test.toyex") == 2
     end
   end
 end
