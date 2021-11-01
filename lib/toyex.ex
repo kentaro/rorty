@@ -15,7 +15,7 @@ defmodule Toyex do
   def run(src) do
     ast =
       try do
-        src |> String.trim() |> Toyex.Grammar.parse!()
+        src |> String.trim() |> parse()
       rescue
         e in Neotomex.Grammar.ParseError ->
           e |> handle_exception()
@@ -37,6 +37,11 @@ defmodule Toyex do
   def run_from_file(filename) do
     {:ok, src} = filename |> File.read()
     run(src)
+  end
+
+  @spec parse(src :: String.t()) :: [%Toyex.Ast.Expr{}]
+  def parse(src) do
+    src |> String.trim() |> Toyex.Grammar.parse!()
   end
 
   defp handle_exception(ex) do
