@@ -97,18 +97,4 @@ defmodule Toyex.Grammar do
 
   define(:space, "[ \\r\\n\\s\\t]*")
   define(:line_break, "[\\r\\n]*")
-
-  def repl do
-    input = IO.gets("Enter an equation: ")
-
-    case input |> String.trim() |> parse() do
-      {:ok, result} ->
-        IO.inspect(result)
-
-      :mismatch ->
-        IO.inspect("You sure you got that right?")
-    end
-
-    repl()
-  end
 end
