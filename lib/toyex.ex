@@ -13,14 +13,7 @@ defmodule Toyex do
   """
   @spec run(String.t()) :: term()
   def run(src) do
-    ast =
-      try do
-        src |> parse()
-      rescue
-        e in Neotomex.Grammar.ParseError ->
-          e |> handle_exception()
-      end
-
+    ast = src |> parse()
     {result, _} = Toyex.Interpreter.interpret(ast, %Toyex.Env{})
     result
   end
@@ -41,7 +34,12 @@ defmodule Toyex do
 
   @spec parse(src :: String.t()) :: [%Toyex.Ast.Expr{}]
   def parse(src) do
-    src |> String.trim() |> Toyex.Grammar.parse!()
+    try do
+      src |> String.trim() |> Toyex.Grammar.parse!()
+    rescue
+      e in Neotomex.Grammar.ParseError ->
+        e |> handle_exception()
+    end
   end
 
   @spec parse_from_file(String.t()) :: [%Toyex.Ast.Expr{}]

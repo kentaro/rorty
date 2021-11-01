@@ -45,22 +45,22 @@ defmodule Toyex.Cli do
     end
   end
 
-  def process([file: file]) do
+  def process(file: file) do
     Toyex.run_from_file(file)
   end
 
-  def process([file: file, ast: true]) do
+  def process(file: file, ast: true) do
     Toyex.parse_from_file(file)
-    |> IO.inspect
+    |> IO.inspect()
   end
 
-  def process([eval: src]) do
+  def process(eval: src) do
     Toyex.run(src)
   end
 
-  def process([eval: src, ast: true]) do
+  def process(eval: src, ast: true) do
     Toyex.parse(src)
-    |> IO.inspect
+    |> IO.inspect()
   end
 
   def process(:help) do
