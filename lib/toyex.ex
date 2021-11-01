@@ -18,8 +18,7 @@ defmodule Toyex do
         src |> String.trim() |> Toyex.Grammar.parse!()
       rescue
         e in Neotomex.Grammar.ParseError ->
-          Neotomex.Grammar.ParseError.message(e)
-          |> handle_error()
+          e |> handle_exception()
       end
 
     {result, _} = Toyex.Interpreter.interpret(ast, %Toyex.Env{})
@@ -40,8 +39,13 @@ defmodule Toyex do
     run(src)
   end
 
-  defp handle_error(message) do
-    IO.puts("Error: #{message}")
+  defp handle_exception(ex) do
+    if ex.error do
+      IO.puts("Error: reason: #{ex.error}, message: #{ex.description}")
+    else
+      IO.puts("Error: #{ex.description}")
+    end
+
     System.halt(1)
   end
 end
