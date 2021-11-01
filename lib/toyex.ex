@@ -13,7 +13,15 @@ defmodule Toyex do
   """
   @spec run(String.t()) :: integer()
   def run(src) do
-    {:ok, ast} = src |> String.trim() |> Toyex.Grammar.parse()
+    ast =
+      try do
+        src |> String.trim() |> Toyex.Grammar.parse!()
+      rescue
+        e in Neotomex.Grammar.ParseError ->
+          Neotomex.Grammar.ParseError.message(e)
+          |> handle_error()
+      end
+
     {result, _} = Toyex.Interpreter.interpret(ast, %Toyex.Env{})
     result
   end
@@ -30,5 +38,10 @@ defmodule Toyex do
   def run_from_file(filename) do
     {:ok, src} = filename |> File.read()
     run(src)
+  end
+
+  defp handle_error(message) do
+    IO.puts("Error: #{message}")
+    System.halt(1)
   end
 end

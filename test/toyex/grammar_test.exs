@@ -10,7 +10,7 @@ defmodule Toyex.Grammar.Test do
       1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
       assert ast == [integer(1)]
     end
 
@@ -19,7 +19,7 @@ defmodule Toyex.Grammar.Test do
       a = 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                assignment(
@@ -35,7 +35,7 @@ defmodule Toyex.Grammar.Test do
       a
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                assignment(
@@ -53,7 +53,7 @@ defmodule Toyex.Grammar.Test do
       a = 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                assignment(
@@ -69,7 +69,7 @@ defmodule Toyex.Grammar.Test do
       b = a
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                assignment(
@@ -92,7 +92,7 @@ defmodule Toyex.Grammar.Test do
       }
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                def(
@@ -117,7 +117,7 @@ defmodule Toyex.Grammar.Test do
       }
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                while(
@@ -149,7 +149,7 @@ defmodule Toyex.Grammar.Test do
       }
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                Toyex.Ast.if(
@@ -180,7 +180,7 @@ defmodule Toyex.Grammar.Test do
       }
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                Toyex.Ast.if(
@@ -207,7 +207,7 @@ defmodule Toyex.Grammar.Test do
       }
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                block([
@@ -226,7 +226,7 @@ defmodule Toyex.Grammar.Test do
       a < 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                less_than(
@@ -241,7 +241,7 @@ defmodule Toyex.Grammar.Test do
       a <= 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                less_or_equal(
@@ -256,7 +256,7 @@ defmodule Toyex.Grammar.Test do
       a > 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                greater_than(
@@ -271,7 +271,7 @@ defmodule Toyex.Grammar.Test do
       a >= 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                greater_or_equal(
@@ -286,7 +286,7 @@ defmodule Toyex.Grammar.Test do
       a == 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                equal(
@@ -301,7 +301,7 @@ defmodule Toyex.Grammar.Test do
       a != 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                not_equal(
@@ -316,7 +316,7 @@ defmodule Toyex.Grammar.Test do
       a + 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                add(
@@ -331,7 +331,7 @@ defmodule Toyex.Grammar.Test do
       a - 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                subtract(
@@ -346,7 +346,7 @@ defmodule Toyex.Grammar.Test do
       a * 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                multiply(
@@ -361,7 +361,7 @@ defmodule Toyex.Grammar.Test do
       a / 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                divide(
@@ -376,7 +376,7 @@ defmodule Toyex.Grammar.Test do
       a % 1
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                mod(
@@ -393,7 +393,7 @@ defmodule Toyex.Grammar.Test do
       (1 + 1)
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                add(
@@ -408,7 +408,7 @@ defmodule Toyex.Grammar.Test do
       foo(a, b)
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                call(
@@ -426,7 +426,7 @@ defmodule Toyex.Grammar.Test do
       "hoge fuga"
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                string("hoge fuga")
@@ -438,7 +438,7 @@ defmodule Toyex.Grammar.Test do
       100
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                integer(100)
@@ -450,7 +450,7 @@ defmodule Toyex.Grammar.Test do
       a
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                identifier("a")
@@ -462,7 +462,7 @@ defmodule Toyex.Grammar.Test do
       true
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                boolean(true)
@@ -474,11 +474,23 @@ defmodule Toyex.Grammar.Test do
       false
       """
 
-      {:ok, ast} = parse(src)
+      ast = parse!(src)
 
       assert ast == [
                boolean(false)
              ]
+    end
+  end
+
+  describe "parse error" do
+    test "incomplete syntax" do
+      src = """
+      a +
+      """
+
+      assert_raise Neotomex.Grammar.ParseError, "parse error", fn ->
+        parse!(src)
+      end
     end
   end
 end
