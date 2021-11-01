@@ -42,6 +42,10 @@ $ toyex -f examples/factorial.toyex
 120
 ```
 
+### --ast / -a
+
+Parses Toyex code and shows the parse tree. This option must be used with either `-e` or `-f` option.
+
 ### --help / -h
 
 Shows the help message.

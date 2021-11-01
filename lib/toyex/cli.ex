@@ -10,36 +10,57 @@ defmodule Toyex.Cli do
         switches: [
           file: :string,
           eval: :string,
+          ast: :boolean,
           help: :boolean
         ],
         aliases: [
           f: :file,
           e: :eval,
+          a: :ast,
           h: :help
         ]
       )
 
     case parse do
       {[file: file], _, _} ->
-        {:file, file}
+        [file: file]
+
+      {[file: file, ast: true], _, _} ->
+        [file: file, ast: true]
 
       {[eval: src], _, _} ->
-        {:eval, src}
+        [eval: src]
+
+      {[eval: src, ast: true], _, _} ->
+        [eval: src, ast: true]
+
+      {[ast: true], _, _} ->
+        :help
 
       {[help: true], _, _} ->
         :help
 
-      _ ->
-        :help
+      x ->
+        IO.inspect(x)
     end
   end
 
-  def process({:file, file}) do
+  def process([file: file]) do
     Toyex.run_from_file(file)
   end
 
-  def process({:eval, src}) do
+  def process([file: file, ast: true]) do
+    Toyex.parse_from_file(file)
+    |> IO.inspect
+  end
+
+  def process([eval: src]) do
     Toyex.run(src)
+  end
+
+  def process([eval: src, ast: true]) do
+    Toyex.parse(src)
+    |> IO.inspect
   end
 
   def process(:help) do
@@ -48,9 +69,10 @@ defmodule Toyex.Cli do
 
     # Options
 
-    -e <program>
-    -f <program file>
-    -h: help
+    -e / --eval <program>
+    -f / --file <program file>
+    -a / --ast  show parse tree. This option must be used with either -e or -f
+    -h / --help show help message
     """)
 
     System.halt(0)
