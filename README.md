@@ -86,19 +86,16 @@ puts(factorial(5))
 ### Fizz Buzz ([fizzbuzz.rorty](./examples/fizzbuzz.rorty))
 
 ```
-def rem(n, base) {
-  n % base
-}
-
 i = 1
+
 while (i <= 100) {
-  if (rem(i, 15) == 0) {
+  if (i % 15 == 0) {
     puts("FizzBuzz")
   } else {
-    if (rem(i, 5) == 0) {
+    if (i % 5 == 0) {
       puts("Buzz")
     } else {
-      if (rem(i, 3) == 0) {
+      if (i % 3 == 0) {
         puts("Fizz")
       } else {
         puts(i)
