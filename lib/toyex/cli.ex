@@ -64,16 +64,19 @@ defmodule Toyex.Cli do
   end
 
   def process(:help) do
-    IO.puts("""
-    usage: toyex [options] [args]
+    IO.puts(
+      """
+      usage: toyex [options] [args]
 
-    # Options
+      # Options
 
-    -e / --eval <program>
-    -f / --file <program file>
-    -a / --ast  show parse tree. This option must be used with either -e or -f
-    -h / --help show help message
-    """ |> String.trim())
+      -e / --eval <program>
+      -f / --file <program file>
+      -a / --ast  show parse tree. This option must be used with either -e or -f
+      -h / --help show help message
+      """
+      |> String.trim()
+    )
 
     System.halt(0)
   end
