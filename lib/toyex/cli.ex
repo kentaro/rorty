@@ -25,14 +25,14 @@ defmodule Toyex.Cli do
       {[file: file], _, _} ->
         [file: file]
 
-      {[file: file, ast: true], _, _} ->
-        [file: file, ast: true]
+      {[ast: true, file: file], _, _} ->
+        [ast: true, file: file]
 
       {[eval: src], _, _} ->
         [eval: src]
 
-      {[eval: src, ast: true], _, _} ->
-        [eval: src, ast: true]
+      {[ast: true, eval: src], _, _} ->
+        [ast: true, eval: src]
 
       {[ast: true], _, _} ->
         :help
@@ -49,7 +49,7 @@ defmodule Toyex.Cli do
     Toyex.run_from_file(file)
   end
 
-  def process(file: file, ast: true) do
+  def process(ast: true, file: file) do
     Toyex.parse_from_file(file)
     |> IO.inspect()
   end
@@ -58,7 +58,7 @@ defmodule Toyex.Cli do
     Toyex.run(src)
   end
 
-  def process(eval: src, ast: true) do
+  def process(ast: true, eval: src) do
     Toyex.parse(src)
     |> IO.inspect()
   end
@@ -73,7 +73,7 @@ defmodule Toyex.Cli do
     -f / --file <program file>
     -a / --ast  show parse tree. This option must be used with either -e or -f
     -h / --help show help message
-    """)
+    """ |> String.trim())
 
     System.halt(0)
   end

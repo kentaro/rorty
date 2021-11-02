@@ -47,7 +47,7 @@ $ toyex -f examples/factorial.toyex
 Parses Toyex code and shows the parse tree. This option must be used with either `-e` or `-f` option.
 
 ```shell
-$ toyex -e '1+1' -a
+$ toyex -a -e '1+1'
 [
   %Toyex.Ast.Expr.Binary{
     left: %Toyex.Ast.Expr.IntegerLiteral{value: 1},
