@@ -80,8 +80,7 @@ def factorial(n) {
   }
 }
 
-result = factorial(5)
-puts(result)
+puts(factorial(5))
 ```
 
 ### Fizz Buzz ([fizzbuzz.toyex](./examples/fizzbuzz.toyex))
