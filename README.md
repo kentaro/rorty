@@ -1,58 +1,58 @@
-# Toyex
+# Rorty
 
-A toy language implementation using Elixir.
+Yet another language implementation using Elixir.
 
 ## Installation
 
-This repository provides a way to build an escript of Toyex interpreter.
+This repository provides the Rorty interpreter as an escript.
 
-* `mix escript.build` generates `toyex` command in your current directory.
+* `mix escript.build` generates `rorty` command in your current directory.
 
 ```shell
 $ mix escript.build
-Generated escript toyex with MIX_ENV=dev
+Generated escript rorty with MIX_ENV=dev
 ```
 
-* `mix escript.install` installs `toyex` command into `$HOME/.mix/escripts`.
+* `mix escript.install` installs `rorty` command into `$HOME/.mix/escripts`.
 
 ```shell
 $ mix escript.install
-Generated escript toyex with MIX_ENV=dev
-Are you sure you want to replace it with "toyex"? [Yn]
-* creating /Users/kentaro/.mix/escripts/toyex
+Generated escript rorty with MIX_ENV=dev
+Are you sure you want to replace it with "rorty"? [Yn]
+* creating /Users/kentaro/.mix/escripts/rorty
 ```
 
 ## Usage
 
 ### --eval / -e
 
-Evaluates the Toyex code.
+Evaluates the given code.
 
 ```shell
-$ toyex -e "puts(1 + 1)"
+$ rorty -e "puts(1 + 1)"
 2
 ```
 
 ### --file / -f
 
-Reads the content of the file and evaluates it.
+Reads the content of the given file and evaluates it.
 
 ```shell
-$ toyex -f examples/factorial.toyex
+$ rorty -f examples/factorial.rorty
 120
 ```
 
 ### --ast / -a
 
-Parses Toyex code and shows the parse tree. This option must be used with either `-e` or `-f` option.
+Parses the given code and shows the parse tree. This option must be used with either `-e` or `-f` option.
 
 ```shell
-$ toyex -a -e '1+1'
+$ rorty -a -e '1+1'
 [
-  %Toyex.Ast.Expr.Binary{
-    left: %Toyex.Ast.Expr.IntegerLiteral{value: 1},
-    operator: Toyex.Operator.Add,
-    right: %Toyex.Ast.Expr.IntegerLiteral{value: 1}
+  %Rorty.Ast.Expr.Binary{
+    left: %Rorty.Ast.Expr.IntegerLiteral{value: 1},
+    operator: Rorty.Operator.Add,
+    right: %Rorty.Ast.Expr.IntegerLiteral{value: 1}
   }
 ]
 ```
@@ -63,13 +63,13 @@ Shows the help message.
 
 ## Grammar
 
-Toyex currently supports a basic grammar.
+Rorty currently supports a basic grammar.
 
-See [lib/toyex/grammar.ex](./lib/toyex/grammar.ex) for details.
+See [lib/rorty/grammar.ex](./lib/rorty/grammar.ex) for details.
 
 ## Examples
 
-### Factorial ([factorial.toyex](./examples/factorial.toyex))
+### Factorial ([factorial.rorty](./examples/factorial.rorty))
 
 ```
 def factorial(n) {
@@ -83,7 +83,7 @@ def factorial(n) {
 puts(factorial(5))
 ```
 
-### Fizz Buzz ([fizzbuzz.toyex](./examples/fizzbuzz.toyex))
+### Fizz Buzz ([fizzbuzz.rorty](./examples/fizzbuzz.rorty))
 
 ```
 def rem(n, base) {
@@ -112,8 +112,8 @@ while (i <= 100) {
 
 ## Acknowledgement
 
-The author has been encouraged by the article published in [WEB+DB PRESS Vol.125](https://gihyo.jp/magazine/wdpress/archive/2021/vol125) to make my own toy language.
+The author has been encouraged by the article published in [WEB+DB PRESS Vol.125](https://gihyo.jp/magazine/wdpress/archive/2021/vol125) to make my own language.
 
 ## Author
 
-Kentaro Kuribayashi <kentarok@gmail.com>
+[Kentaro Kuribayashi](https://kentarokuribayashi.com/) &lt;kentarok@gmail.com&gt;

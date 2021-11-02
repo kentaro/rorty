@@ -1,8 +1,8 @@
-defmodule Toyex.Grammar.Test do
+defmodule Rorty.Grammar.Test do
   use ExUnit.Case
-  doctest Toyex
+  doctest Rorty
 
-  import Toyex.{Ast, Grammar}
+  import Rorty.{Ast, Grammar}
 
   describe "statements" do
     test "single line with an expression" do
@@ -152,7 +152,7 @@ defmodule Toyex.Grammar.Test do
       ast = parse!(src)
 
       assert ast == [
-               Toyex.Ast.if(
+               Rorty.Ast.if(
                  less_than(
                    identifier("a"),
                    integer(10)
@@ -183,7 +183,7 @@ defmodule Toyex.Grammar.Test do
       ast = parse!(src)
 
       assert ast == [
-               Toyex.Ast.if(
+               Rorty.Ast.if(
                  less_than(
                    identifier("a"),
                    integer(10)

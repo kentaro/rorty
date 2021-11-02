@@ -1,15 +1,15 @@
-defmodule Toyex.Interpreter do
+defmodule Rorty.Interpreter do
   @doc """
   Interprets and evaluates the given AST.
 
   ## Examples
 
-      iex> env = %Toyex.Env{}
-      iex> Toyex.interpret(Toyex.Ast.add(Toyex.Ast.multiply(Toyex.Ast.integer(3), Toyex.Ast.integer(3)), Toyex.Ast.integer(1)), env)
+      iex> env = %Rorty.Env{}
+      iex> Rorty.interpret(Rorty.Ast.add(Rorty.Ast.multiply(Rorty.Ast.integer(3), Rorty.Ast.integer(3)), Rorty.Ast.integer(1)), env)
       {10, env}
 
   """
-  def interpret(exprs, %Toyex.Env{} = env) when is_list(exprs) do
+  def interpret(exprs, %Rorty.Env{} = env) when is_list(exprs) do
     exprs
     |> Enum.reduce({0, env}, fn expr, acc ->
       {_, env} = acc
@@ -17,36 +17,36 @@ defmodule Toyex.Interpreter do
     end)
   end
 
-  def interpret(%Toyex.Ast.Expr.Binary{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.Binary{} = expr, %Rorty.Env{} = env) do
     {left, env} = interpret(expr.left, env)
     {right, env} = interpret(expr.right, env)
 
     expr.operator.execute(left, right, env)
   end
 
-  def interpret(%Toyex.Ast.Expr.IntegerLiteral{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.IntegerLiteral{} = expr, %Rorty.Env{} = env) do
     {expr.value, env}
   end
 
-  def interpret(%Toyex.Ast.Expr.StringLiteral{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.StringLiteral{} = expr, %Rorty.Env{} = env) do
     {expr.value, env}
   end
 
-  def interpret(%Toyex.Ast.Expr.Identifier{} = expr, %Toyex.Env{} = env) do
-    value = Toyex.Env.get(env, expr)
+  def interpret(%Rorty.Ast.Expr.Identifier{} = expr, %Rorty.Env{} = env) do
+    value = Rorty.Env.get(env, expr)
     {value, env}
   end
 
-  def interpret(%Toyex.Ast.Expr.Boolean{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.Boolean{} = expr, %Rorty.Env{} = env) do
     {expr.value, env}
   end
 
-  def interpret(%Toyex.Ast.Expr.Assignment{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.Assignment{} = expr, %Rorty.Env{} = env) do
     {value, env} = interpret(expr.value, env)
-    {value, Toyex.Env.put(env, expr.name, value)}
+    {value, Rorty.Env.put(env, expr.name, value)}
   end
 
-  def interpret(%Toyex.Ast.Expr.Block{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.Block{} = expr, %Rorty.Env{} = env) do
     expr.exprs
     |> Enum.reduce({0, env}, fn expr, acc ->
       {_, env} = acc
@@ -54,7 +54,7 @@ defmodule Toyex.Interpreter do
     end)
   end
 
-  def interpret(%Toyex.Ast.Expr.If{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.If{} = expr, %Rorty.Env{} = env) do
     {condition, env} = interpret(expr.condition, env)
 
     if condition do
@@ -68,7 +68,7 @@ defmodule Toyex.Interpreter do
     end
   end
 
-  def interpret(%Toyex.Ast.Expr.While{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.While{} = expr, %Rorty.Env{} = env) do
     {condition, env} = interpret(expr.condition, env)
 
     if condition do
@@ -79,20 +79,20 @@ defmodule Toyex.Interpreter do
     end
   end
 
-  def interpret(%Toyex.Ast.Expr.Def{} = expr, %Toyex.Env{} = env) do
-    env = Toyex.Env.put_def(env, expr.name, expr)
+  def interpret(%Rorty.Ast.Expr.Def{} = expr, %Rorty.Env{} = env) do
+    env = Rorty.Env.put_def(env, expr.name, expr)
     {false, env}
   end
 
-  def interpret(%Toyex.Ast.Expr.Call{} = expr, %Toyex.Env{} = env) do
+  def interpret(%Rorty.Ast.Expr.Call{} = expr, %Rorty.Env{} = env) do
     def = resolve_function(env, expr.name)
     call_function(def, expr, env)
   end
 
   defp resolve_function(env, name) do
     def =
-      Toyex.Env.get_def(env, name) ||
-        Toyex.Builtins.function_for(name.name)
+      Rorty.Env.get_def(env, name) ||
+        Rorty.Builtins.function_for(name.name)
 
     unless def do
       raise("no such function: #{name}")
@@ -101,12 +101,12 @@ defmodule Toyex.Interpreter do
     def
   end
 
-  defp call_function(%Toyex.Ast.Expr.Def{} = def, %Toyex.Ast.Expr.Call{} = caller, env) do
+  defp call_function(%Rorty.Ast.Expr.Def{} = def, %Rorty.Ast.Expr.Call{} = caller, env) do
     local_env =
       Enum.zip(def.args || [], caller.args || [])
-      |> Enum.reduce(%Toyex.Env{}, fn {name, expr}, acc ->
+      |> Enum.reduce(%Rorty.Env{}, fn {name, expr}, acc ->
         {var, _} = interpret(expr, env)
-        Toyex.Env.put(acc, name, var)
+        Rorty.Env.put(acc, name, var)
       end)
       |> Map.put(:defs, env.defs)
 
@@ -114,7 +114,7 @@ defmodule Toyex.Interpreter do
     {value, env}
   end
 
-  defp call_function([module: module, name: name], %Toyex.Ast.Expr.Call{} = caller, env) do
+  defp call_function([module: module, name: name], %Rorty.Ast.Expr.Call{} = caller, env) do
     args =
       caller.args
       |> Enum.map(&interpret(&1, env))

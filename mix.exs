@@ -1,10 +1,10 @@
-defmodule Toyex.MixProject do
+defmodule Rorty.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :toyex,
-      escript: [main_module: Toyex.Cli],
+      app: :rorty,
+      escript: [main_module: Rorty.Cli],
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,

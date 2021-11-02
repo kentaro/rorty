@@ -1,4 +1,4 @@
-defmodule Toyex.Builtins do
+defmodule Rorty.Builtins do
   @functions %{
     "puts" => [module: IO, name: :puts]
   }

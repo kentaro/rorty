@@ -1,12 +1,12 @@
-defmodule Toyex.Interpreter.Test do
+defmodule Rorty.Interpreter.Test do
   use ExUnit.Case
-  doctest Toyex
+  doctest Rorty
 
-  import Toyex.Ast
+  import Rorty.Ast
 
   describe "interpret()" do
     test "multiple expressions" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast = [
         assignment(
@@ -22,12 +22,12 @@ defmodule Toyex.Interpreter.Test do
         )
       ]
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 10
     end
 
     test "binary expression" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast =
         add(
@@ -38,44 +38,44 @@ defmodule Toyex.Interpreter.Test do
           integer(1)
         )
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 10
     end
 
     test "identifier expression" do
-      env = %Toyex.Env{vars: %{identifier("foo") => 10}}
+      env = %Rorty.Env{vars: %{identifier("foo") => 10}}
       ast = identifier("foo")
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 10
     end
 
     test "boolean expression with true value" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
       ast = boolean(true)
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == true
     end
 
     test "boolean expression with false value" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
       ast = boolean(false)
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == false
     end
 
     test "assignment expression" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
       ast = assignment(identifier("foo"), integer(10))
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 10
     end
 
     test "block expression" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast =
         block([
@@ -86,12 +86,12 @@ defmodule Toyex.Interpreter.Test do
           )
         ])
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 13
     end
 
     test "if expression with an else clause when the condition is true" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast =
         if(
@@ -100,12 +100,12 @@ defmodule Toyex.Interpreter.Test do
           block([integer(99)])
         )
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 100
     end
 
     test "if expression with an else clause when the condition is false" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast =
         if(
@@ -114,38 +114,38 @@ defmodule Toyex.Interpreter.Test do
           block([integer(99)])
         )
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 99
     end
 
     test "if expression without an else clause when the condition is true" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast =
-        Toyex.Ast.if(
+        Rorty.Ast.if(
           equal(integer(1), integer(1)),
           block([integer(100)])
         )
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 100
     end
 
     test "if expression without an else clause when the condition is false" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       ast =
-        Toyex.Ast.if(
+        Rorty.Ast.if(
           equal(integer(1), integer(0)),
           block([integer(100)])
         )
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == false
     end
 
     test "while expression" do
-      env = %Toyex.Env{vars: %{identifier("foo") => 10}}
+      env = %Rorty.Env{vars: %{identifier("foo") => 10}}
 
       ast =
         while(
@@ -164,12 +164,12 @@ defmodule Toyex.Interpreter.Test do
           ])
         )
 
-      {result, _env} = Toyex.Interpreter.interpret(ast, env)
+      {result, _env} = Rorty.Interpreter.interpret(ast, env)
       assert result == false
     end
 
     test "def expression" do
-      env = %Toyex.Env{}
+      env = %Rorty.Env{}
 
       def =
         def(
@@ -180,13 +180,13 @@ defmodule Toyex.Interpreter.Test do
 
       ast = def
 
-      {result, env} = Toyex.Interpreter.interpret(ast, env)
+      {result, env} = Rorty.Interpreter.interpret(ast, env)
       assert result == false
-      assert Toyex.Env.get_def(env, "foo") == def
+      assert Rorty.Env.get_def(env, "foo") == def
     end
 
     test "call expression" do
-      env = %Toyex.Env{vars: %{identifier("a") => 1, identifier("b") => 2}}
+      env = %Rorty.Env{vars: %{identifier("a") => 1, identifier("b") => 2}}
 
       def =
         def(
@@ -209,10 +209,10 @@ defmodule Toyex.Interpreter.Test do
           ])
         ])
 
-      {result, env} = Toyex.Interpreter.interpret(ast, env)
+      {result, env} = Rorty.Interpreter.interpret(ast, env)
       assert result == 7
 
-      assert env == %Toyex.Env{
+      assert env == %Rorty.Env{
                vars: %{identifier("a") => 1, identifier("b") => 2},
                defs: %{identifier("foo") => def}
              }

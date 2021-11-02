@@ -1,4 +1,4 @@
-defmodule Toyex.Cli do
+defmodule Rorty.Cli do
   def main(argv) do
     parse_argv(argv)
     |> process
@@ -46,27 +46,27 @@ defmodule Toyex.Cli do
   end
 
   def process(file: file) do
-    Toyex.run_from_file(file)
+    Rorty.run_from_file(file)
   end
 
   def process(ast: true, file: file) do
-    Toyex.parse_from_file(file)
+    Rorty.parse_from_file(file)
     |> IO.inspect()
   end
 
   def process(eval: src) do
-    Toyex.run(src)
+    Rorty.run(src)
   end
 
   def process(ast: true, eval: src) do
-    Toyex.parse(src)
+    Rorty.parse(src)
     |> IO.inspect()
   end
 
   def process(:help) do
     IO.puts(
       """
-      usage: toyex [options] [args]
+      usage: rorty [options] [args]
 
       # Options
 

@@ -1,16 +1,16 @@
-defmodule Toyex.Operator do
+defmodule Rorty.Operator do
   @callback execute(
-              left :: Toyex.Ast.Expr.t(),
-              right :: Toyex.Ast.Expr.t(),
-              env :: Toyex.Env.t()
+              left :: Rorty.Ast.Expr.t(),
+              right :: Rorty.Ast.Expr.t(),
+              env :: Rorty.Env.t()
             ) :: {
-              Toyex.Ast.Expr.t(),
-              Toyex.Env.t()
+              Rorty.Ast.Expr.t(),
+              Rorty.Env.t()
             }
 
   defmacro __using__(_opts) do
     quote do
-      @behaviour Toyex.Operator
+      @behaviour Rorty.Operator
 
       def to_string() do
         @name
@@ -19,99 +19,99 @@ defmodule Toyex.Operator do
   end
 end
 
-defmodule Toyex.Operator.Add do
+defmodule Rorty.Operator.Add do
   @name "add"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left + right, env}
   end
 end
 
-defmodule Toyex.Operator.Divide do
+defmodule Rorty.Operator.Divide do
   @name "divide"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left / right, env}
   end
 end
 
-defmodule Toyex.Operator.Equal do
+defmodule Rorty.Operator.Equal do
   @name "equal"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left == right, env}
   end
 end
 
-defmodule Toyex.Operator.GreaterOrEqual do
+defmodule Rorty.Operator.GreaterOrEqual do
   @name "greater_or_equal"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left >= right, env}
   end
 end
 
-defmodule Toyex.Operator.GreaterThan do
+defmodule Rorty.Operator.GreaterThan do
   @name "greater_than"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left > right, env}
   end
 end
 
-defmodule Toyex.Operator.LessOrEqual do
+defmodule Rorty.Operator.LessOrEqual do
   @name "less_or_equal"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left <= right, env}
   end
 end
 
-defmodule Toyex.Operator.LessThan do
+defmodule Rorty.Operator.LessThan do
   @name "less_than"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left < right, env}
   end
 end
 
-defmodule Toyex.Operator.Multiply do
+defmodule Rorty.Operator.Multiply do
   @name "multiply"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left * right, env}
   end
 end
 
-defmodule Toyex.Operator.NotEqual do
+defmodule Rorty.Operator.NotEqual do
   @name "not_equal"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left != right, env}
   end
 end
 
-defmodule Toyex.Operator.Subtract do
+defmodule Rorty.Operator.Subtract do
   @name "subtract"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {left - right, env}
   end
 end
 
-defmodule Toyex.Operator.Mod do
+defmodule Rorty.Operator.Mod do
   @name "mod"
-  use Toyex.Operator
+  use Rorty.Operator
 
   def execute(left, right, env) do
     {rem(left, right), env}

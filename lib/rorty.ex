@@ -1,6 +1,6 @@
-defmodule Toyex do
+defmodule Rorty do
   @moduledoc """
-  Documentation for `Toyex`.
+  Documentation for `Rorty`.
   """
 
   @doc """
@@ -8,13 +8,13 @@ defmodule Toyex do
 
   ## Examples
 
-    iex> Toyex.run("1 + 1")
+    iex> Rorty.run("1 + 1")
     2
   """
   @spec run(String.t()) :: term()
   def run(src) do
     ast = src |> parse()
-    {result, _} = Toyex.Interpreter.interpret(ast, %Toyex.Env{})
+    {result, _} = Rorty.Interpreter.interpret(ast, %Rorty.Env{})
     result
   end
 
@@ -23,7 +23,7 @@ defmodule Toyex do
 
   ## Examples
 
-    # iex> Toyex.run_from_file("examples/factorial.toyex")
+    # iex> Rorty.run_from_file("examples/factorial.rorty")
     # 120
   """
   @spec run_from_file(String.t()) :: term()
@@ -32,17 +32,17 @@ defmodule Toyex do
     src |> run()
   end
 
-  @spec parse(src :: String.t()) :: [%Toyex.Ast.Expr{}]
+  @spec parse(src :: String.t()) :: [%Rorty.Ast.Expr{}]
   def parse(src) do
     try do
-      src |> String.trim() |> Toyex.Grammar.parse!()
+      src |> String.trim() |> Rorty.Grammar.parse!()
     rescue
       e in Neotomex.Grammar.ParseError ->
         e |> handle_exception()
     end
   end
 
-  @spec parse_from_file(String.t()) :: [%Toyex.Ast.Expr{}]
+  @spec parse_from_file(String.t()) :: [%Rorty.Ast.Expr{}]
   def parse_from_file(filename) do
     {:ok, src} = filename |> File.read()
     src |> parse()
