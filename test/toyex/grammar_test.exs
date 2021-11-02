@@ -387,6 +387,44 @@ defmodule Toyex.Grammar.Test do
     end
   end
 
+  describe "operator precedence" do
+    test "5 * 4 - 2" do
+      src = """
+      5 * 4 - 2
+      """
+
+      ast = parse!(src)
+
+      assert ast == [
+               subtract(
+                 multiply(
+                   integer(5),
+                   integer(4)
+                 ),
+                 integer(2)
+               )
+             ]
+    end
+
+    test "5 - 4 * 2" do
+      src = """
+      5 - 4 * 2
+      """
+
+      ast = parse!(src)
+
+      assert ast == [
+               subtract(
+                 integer(5),
+                 multiply(
+                   integer(4),
+                   integer(2)
+                 )
+               )
+             ]
+    end
+  end
+
   describe "primary" do
     test "expr with parens" do
       src = """

@@ -45,22 +45,36 @@ defmodule Toyex.Grammar do
 
   define(:expr, "binary_expr")
 
-  define :binary_expr, "primary <space?> binary_operator <space?> binary_expr / primary" do
+  define(:binary_expr, "comparative")
+
+  define :comparative, "additive <space?> comparative_operator <space?> comparative / additive" do
     [left, "<", right] -> Toyex.Ast.less_than(left, right)
     [left, "<=", right] -> Toyex.Ast.less_or_equal(left, right)
     [left, ">", right] -> Toyex.Ast.greater_than(left, right)
     [left, ">=", right] -> Toyex.Ast.greater_or_equal(left, right)
     [left, "==", right] -> Toyex.Ast.equal(left, right)
     [left, "!=", right] -> Toyex.Ast.not_equal(left, right)
+    primary -> primary
+  end
+
+  define :additive, "multitive <space?> additive_operator <space?> additive / multitive" do
     [left, "+", right] -> Toyex.Ast.add(left, right)
     [left, "-", right] -> Toyex.Ast.subtract(left, right)
+    primary -> primary
+  end
+
+  define :multitive, "primary <space?> multitive_operator <space?> multitive / primary" do
     [left, "*", right] -> Toyex.Ast.multiply(left, right)
     [left, "/", right] -> Toyex.Ast.divide(left, right)
     [left, "%", right] -> Toyex.Ast.mod(left, right)
     primary -> primary
   end
 
-  define(:binary_operator, "'<=' / '<' / '>=' / '>' / '==' / '!=' / '+' / '-' / '*' / '/' / '%'")
+  define(:comparative_operator, "'<=' / '<' / '>=' / '>' / '==' / '!='")
+
+  define(:additive_operator, "'+' / '-'")
+
+  define(:multitive_operator, "'*' / '/' / '%'")
 
   define(:primary, "<'('> expr <')'> / call / string / number / boolean / identifier")
 
