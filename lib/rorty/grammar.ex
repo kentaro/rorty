@@ -25,12 +25,12 @@ defmodule Rorty.Grammar do
       Rorty.Ast.def(name, args, body)
   end
 
-  define :while, "<'while'> <space?> <'('> expr <')'> block" do
+  define :while, "<'while'> <space?> <'('> <space?> expr <space?> <')'> block" do
     [condition, body] ->
       Rorty.Ast.while(condition, body)
   end
 
-  define :for, "<'for'> <space?> <'('> <space?> identifier <space?> <'in'> <space?> expr <space?> <'to'> <space?> expr <space?> <')'> block" do
+  define :for, "<'for'> <space?> <'('> <space?> identifier <space?> <'in'> <space?> expr <space?> <'to'> <space?> expr <space?><')'> block" do
     [ident, start, last, body] ->
       [
         Rorty.Ast.assignment(ident, start),
