@@ -9,7 +9,7 @@ defmodule Rorty.Grammar do
     statements -> statements
   end
 
-  define(:statement, "<space?> (assignment / def / while / if / block / expr) <space?>")
+  define(:statement, "<space?> (assignment / def / while / for / if / block / expr) <space?>")
 
   define :assignment, "identifier <space?> <'='> <space?> expr" do
     [name, value] -> Rorty.Ast.assignment(name, value)
@@ -28,6 +28,32 @@ defmodule Rorty.Grammar do
   define :while, "<'while'> <space?> <'('> expr <')'> block" do
     [condition, body] ->
       Rorty.Ast.while(condition, body)
+  end
+
+  define :for, "<'for'> <space?> <'('> <space?> identifier <space?> <'in'> <space?> expr <space?> <'to'> <space?> expr <space?> <')'> block" do
+    [ident, start, last, body] ->
+      [
+        Rorty.Ast.assignment(ident, start),
+        Rorty.Ast.while(
+          Rorty.Ast.less_or_equal(
+            Rorty.Ast.identifier(ident.name),
+            last
+          ),
+          %Rorty.Ast.Expr.Block{
+            exprs:
+              Enum.reverse([
+                Rorty.Ast.assignment(
+                  Rorty.Ast.identifier(ident.name),
+                  Rorty.Ast.add(
+                    Rorty.Ast.identifier(ident.name),
+                    Rorty.Ast.integer(1)
+                  )
+                )
+                | body.exprs
+              ])
+          }
+        )
+      ]
   end
 
   define :if, "<'if'> <space?> <'('> expr <')'> block (<space?> <'else'> block)?" do

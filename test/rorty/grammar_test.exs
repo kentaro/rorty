@@ -139,6 +139,46 @@ defmodule Rorty.Grammar.Test do
     end
   end
 
+  describe "for" do
+    test "single for statement" do
+      src = """
+      for (i in 1 to 10) {
+        puts(i)
+      }
+      """
+
+      ast = parse!(src)
+
+      assert ast == [
+               assignment(
+                 identifier("i"),
+                 integer(1)
+               ),
+               while(
+                 less_or_equal(
+                   identifier("i"),
+                   integer(10)
+                 ),
+                 block([
+                   call(
+                     identifier("puts"),
+                     [
+                       identifier("i")
+                     ]
+                   ),
+                   assignment(
+                     identifier("i"),
+                     add(
+                       identifier("i"),
+                       integer(1)
+                     )
+                   )
+                 ])
+               )
+             ]
+    end
+  end
+
   describe "if" do
     test "single if statement with both then and otherwise" do
       src = """

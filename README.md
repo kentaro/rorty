@@ -86,9 +86,7 @@ puts(factorial(5))
 ### Fizz Buzz ([fizzbuzz.rorty](./examples/fizzbuzz.rorty))
 
 ```
-i = 1
-
-while (i <= 100) {
+for (i in 1 to 100) {
   if (i % 15 == 0) {
     puts("FizzBuzz")
   } else {
@@ -102,8 +100,6 @@ while (i <= 100) {
       }
     }
   }
-
-  i = i + 1
 }
 ```
 
