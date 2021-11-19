@@ -11,7 +11,7 @@ defmodule Rorty.Interpreter do
   """
   def interpret(exprs, %Rorty.Env{} = env) when is_list(exprs) do
     exprs
-    |> Enum.reduce({0, env}, fn expr, acc ->
+    |> Enum.reduce({false, env}, fn expr, acc ->
       {_, env} = acc
       interpret(expr, env)
     end)
