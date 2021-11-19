@@ -13,8 +13,11 @@ defmodule Rorty do
   """
   @spec run(String.t()) :: term()
   def run(src) do
-    ast = src |> parse()
-    {result, _} = Rorty.Interpreter.interpret(ast, %Rorty.Env{})
+    {result, _} =
+      src
+      |> parse()
+      |> Rorty.Interpreter.interpret(%Rorty.Env{})
+
     result
   end
 

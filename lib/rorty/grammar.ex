@@ -30,7 +30,8 @@ defmodule Rorty.Grammar do
       Rorty.Ast.while(condition, body)
   end
 
-  define :for, "<'for'> <space?> <'('> <space?> identifier <space?> <'in'> <space?> expr <space?> <'to'> <space?> expr <space?><')'> block" do
+  define :for,
+         "<'for'> <space?> <'('> <space?> identifier <space?> <'in'> <space?> expr <space?> <'to'> <space?> expr <space?><')'> block" do
     [ident, start, last, body] ->
       [
         Rorty.Ast.assignment(ident, start),
